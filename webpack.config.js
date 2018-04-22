@@ -47,6 +47,7 @@ const common = {
 }
 
 const development = {
+  mode: 'development',
   devServer: {
     historyApiFallback: true,
     inline: true,
@@ -59,6 +60,7 @@ const development = {
 }
 
 const production = {
+  mode: 'production',
   plugins: [
     new CleanWebpackPlugin([paths.DEST]),
   ],
