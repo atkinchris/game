@@ -7,7 +7,7 @@ class Zone {
     this.id = `${String(worldX).padStart(4, 0)}${String(worldY).padStart(4, 0)}`
     this.worldX = worldX
     this.worldY = worldY
-    this.cells = {}
+    this.cells = []
     this.regions = {}
 
     for (let y = 0; y < ZONE_SIZE; y += 1) {
@@ -33,17 +33,19 @@ class Zone {
   }
 
   addEntity(entity) {
-    const hash = Zone.toLocalHash(entity)
+    const localPosition = Zone.toLocalPos(entity)
+    const hash = Zone.toIndex(localPosition)
     this.cells[hash] = entity
     return entity
   }
 
   getEntities() {
-    return Object.values(this.cells)
+    return this.cells
   }
 
   getEntity(x, y) {
-    return this.cells[Zone.toLocalHash({ x, y })]
+    const localPosition = Zone.toLocalPos({ x, y })
+    return this.cells[Zone.toIndex(localPosition)]
   }
 
   getRegion(regionId) {
@@ -55,10 +57,14 @@ class Zone {
   }
 
   flood(x, y, region) {
+    if (x < 0 || x >= ZONE_SIZE || y < 0 || y >= ZONE_SIZE) {
+      return
+    }
+
     const node = this.getEntity(x, y)
     if (!node || node.blocked || node.region) return
 
-    this.regions[region.id].addEntity(node)
+    region.addEntity(node)
     node.region = region
 
     this.flood(x - 1, y, region)
@@ -70,33 +76,45 @@ class Zone {
   resetRegions() {
     this.regions = {}
     this.lastRegionId = 0
-    const entities = this.getEntities()
 
-    for (let index = 0; index < entities.length; index += 1) {
-      entities[index].region = null
+    for (let i = 0; i < this.cells.length; i += 1) {
+      this.cells[i].region = null
     }
   }
 
   rebuild() {
-    const getNextFree = () => this.getEntities().find(p => !p.region && !p.blocked)
+    const getNextFree = () => this.getEntities().findIndex(p => !p.region && !p.blocked)
 
     this.resetRegions()
     let next = getNextFree()
 
-    while (next) {
+    while (next !== -1) {
       this.lastRegionId += 1
       const region = new Region(`${this.id}::${this.lastRegionId}`)
       this.regions[region.id] = region
-      this.flood(next.x, next.y, region)
+
+      const position = Zone.toPosition(next)
+      this.flood(position.x, position.y, region)
       next = getNextFree()
     }
   }
 
-  static toLocalHash({ x, y }) {
-    const localX = x % ZONE_SIZE
-    const localY = y % ZONE_SIZE
+  static toLocalPos({ x, y }) {
+    return {
+      x: x % ZONE_SIZE,
+      y: y % ZONE_SIZE,
+    }
+  }
 
-    return (localY * ZONE_SIZE) + localX
+  static toPosition(index) {
+    return {
+      x: index % ZONE_SIZE,
+      y: Math.floor(index / ZONE_SIZE),
+    }
+  }
+
+  static toIndex({ x, y }) {
+    return (y * ZONE_SIZE) + x
   }
 }
 
