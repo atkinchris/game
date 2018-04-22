@@ -57,7 +57,7 @@ class World {
     return this.zones
   }
 
-  touch(x, y) {
+  onClick(x, y) {
     const { blocked } = this.getEntity(x, y) || {}
     this.addEntity({
       x,

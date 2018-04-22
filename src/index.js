@@ -53,7 +53,7 @@ const toWorldCoordinates = (x, y) => ({
 canvas.onclick = (event) => {
   const rect = canvas.getBoundingClientRect()
   const { x, y } = toWorldCoordinates(event.clientX - rect.left, event.clientY - rect.top)
-  world.touch(x, y)
+  world.onClick(x, y)
   render()
 }
 
