@@ -27,8 +27,6 @@ class Region {
   getNeighbouringEntities() {
     let entities = [...this.entities]
 
-    console.log(this.neighbours)
-
     for (let i = 0; i < this.neighbours.length; i += 1) {
       const neighbour = this.world.getRegion(this.neighbours[i])
       entities = entities.concat(neighbour.getEntities())

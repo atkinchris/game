@@ -33,19 +33,6 @@ const render = () => {
 
   for (let zoneIndex = 0; zoneIndex < zones.length; zoneIndex += 1) {
     const zone = zones[zoneIndex]
-    const { x, y, width, height } = zone.getBounds()
-
-    context.beginPath()
-    context.strokeStyle = 'black'
-    context.lineWidth = '5'
-    context.rect(
-      x * TILE_SIZE,
-      y * TILE_SIZE,
-      width * TILE_SIZE,
-      height * TILE_SIZE,
-    )
-    context.stroke()
-    context.closePath()
 
     const regions = zone.getRegions()
     for (let i = 0; i < regions.length; i += 1) {
@@ -62,15 +49,28 @@ const render = () => {
       }
     }
 
-    const edges = zone.getEdges()
+    const { x, y, width, height } = zone.getBounds()
     context.beginPath()
-    context.strokeStyle = 'red'
-    context.lineWidth = '2'
-    for (let e = 0; e < edges.length; e += 1) {
-      const edge = edges[e]
-      context.rect(edge.x * TILE_SIZE, edge.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
-    }
+    context.strokeStyle = 'black'
+    context.lineWidth = '5'
+    context.rect(
+      x * TILE_SIZE,
+      y * TILE_SIZE,
+      width * TILE_SIZE,
+      height * TILE_SIZE,
+    )
     context.stroke()
+    context.closePath()
+
+    // const edges = zone.getEdges()
+    // context.beginPath()
+    // context.strokeStyle = 'red'
+    // context.lineWidth = '2'
+    // for (let e = 0; e < edges.length; e += 1) {
+    //   const edge = edges[e]
+    //   context.rect(edge.x * TILE_SIZE, edge.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+    // }
+    // context.stroke()
   }
 
   // requestAnimationFrame(render)
