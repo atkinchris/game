@@ -10,6 +10,7 @@ const context = canvas.getContext('2d')
 context.translate(TRANSLATE, TRANSLATE)
 
 const world = new World()
+window.world = world
 mapToEntities(map).forEach(entity => world.addEntity(entity))
 
 const render = () => {
@@ -33,10 +34,9 @@ const render = () => {
   for (let zoneIndex = 0; zoneIndex < zones.length; zoneIndex += 1) {
     const zone = zones[zoneIndex]
     const { x, y, width, height } = zone.getBounds()
-    const edges = zone.getEdges()
 
     context.beginPath()
-    context.strokeStyle = 'blue'
+    context.strokeStyle = 'black'
     context.lineWidth = '5'
     context.rect(
       x * TILE_SIZE,
@@ -47,6 +47,22 @@ const render = () => {
     context.stroke()
     context.closePath()
 
+    const regions = zone.getRegions()
+    for (let i = 0; i < regions.length; i += 1) {
+      const region = regions[i]
+
+      if (region === world.selectedRegion) {
+        const rEntities = region.getNeighbouringEntities()
+        for (let j = 0; j < rEntities.length; j += 1) {
+          const entity = rEntities[j]
+
+          context.fillStyle = 'white'
+          context.fillRect(entity.x * TILE_SIZE, entity.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+        }
+      }
+    }
+
+    const edges = zone.getEdges()
     context.beginPath()
     context.strokeStyle = 'red'
     context.lineWidth = '2'
@@ -56,6 +72,8 @@ const render = () => {
     }
     context.stroke()
   }
+
+  // requestAnimationFrame(render)
 }
 
 const toWorldCoordinates = (x, y) => ({
@@ -67,7 +85,7 @@ canvas.onclick = (event) => {
   const rect = canvas.getBoundingClientRect()
   const { x, y } = toWorldCoordinates(event.clientX - rect.left, event.clientY - rect.top)
   world.onClick(x, y)
-  render()
+  requestAnimationFrame(render)
 }
 
-render()
+requestAnimationFrame(render)

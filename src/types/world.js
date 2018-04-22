@@ -4,6 +4,7 @@ class World {
   constructor() {
     this.zones = []
     this.dirtyZones = []
+    this.edges = {}
   }
 
   addZone(x, y) {
@@ -18,7 +19,6 @@ class World {
     if (!zone) {
       const zX = Math.floor(entity.x / ZONE_SIZE)
       const zY = Math.floor(entity.y / ZONE_SIZE)
-      console.log(`Creating zone at {${zX}, ${zY}}`)
       zone = this.addZone(zX, zY)
     }
 
@@ -57,13 +57,34 @@ class World {
     return this.zones
   }
 
+  getEdges() {
+    return this.edges
+  }
+
+  registerEdge(hash, regionId) {
+    const edge = this.edges[hash] || []
+
+    if (edge.indexOf(regionId) === -1) {
+      edge.push(regionId)
+    }
+
+    this.edges[hash] = edge
+  }
+
+  unregisterEdge(hash, regionId) {
+    this.edges[hash] = (this.edges[hash] || []).filter(e => e && e !== regionId)
+  }
+
+  getNeighbour(hash, regionId) {
+    return (this.edges[hash] || []).filter(e => e !== regionId)[0]
+  }
+
   onClick(x, y) {
-    const { blocked } = this.getEntity(x, y) || {}
-    this.addEntity({
-      x,
-      y,
-      blocked: !blocked,
-    })
+    const { region } = this.getEntity(x, y) || {}
+    // const { blocked } = this.getEntity(x, y) || {}
+    // this.addEntity({ x, y, blocked: !blocked })
+
+    this.selectedRegion = region
   }
 }
 

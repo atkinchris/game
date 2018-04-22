@@ -87,6 +87,12 @@ class Zone {
   }
 
   resetRegions() {
+    const regions = Object.values(this.regions)
+
+    for (let i = 0; i < regions.length; i += 1) {
+      regions[i].destroy()
+    }
+
     this.regions = {}
     this.lastRegionId = 0
 
@@ -108,7 +114,7 @@ class Zone {
 
       const position = Zone.toPosition(next)
       this.flood(position.x, position.y, region)
-      region.buildEdges()
+      region.buildNeighbours()
       next = getNextFree()
     }
   }
