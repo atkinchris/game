@@ -52,6 +52,8 @@ const development = {
     historyApiFallback: true,
     inline: true,
     stats: 'errors-only',
+    host: '0.0.0.0',
+    disableHostCheck: true,
   },
   plugins: [
     new webpack.LoaderOptionsPlugin({ debug: true }),
