@@ -31,8 +31,11 @@ const render = () => {
   }
 
   for (let zoneIndex = 0; zoneIndex < zones.length; zoneIndex += 1) {
-    const { x, y, width, height } = zones[zoneIndex].getBounds()
+    const zone = zones[zoneIndex]
+    const { x, y, width, height } = zone.getBounds()
+    const edges = zone.getEdges()
 
+    context.beginPath()
     context.strokeStyle = 'blue'
     context.lineWidth = '5'
     context.rect(
@@ -41,6 +44,16 @@ const render = () => {
       width * TILE_SIZE,
       height * TILE_SIZE,
     )
+    context.stroke()
+    context.closePath()
+
+    context.beginPath()
+    context.strokeStyle = 'red'
+    context.lineWidth = '2'
+    for (let e = 0; e < edges.length; e += 1) {
+      const edge = edges[e]
+      context.rect(edge.x * TILE_SIZE, edge.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+    }
     context.stroke()
   }
 }

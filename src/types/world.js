@@ -7,7 +7,7 @@ class World {
   }
 
   addZone(x, y) {
-    const zone = new Zone(x, y)
+    const zone = new Zone(x, y, this)
     this.zones.push(zone)
     return zone
   }

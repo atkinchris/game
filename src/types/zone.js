@@ -3,10 +3,11 @@ import Region from './region'
 export const ZONE_SIZE = 14
 
 class Zone {
-  constructor(worldX, worldY) {
+  constructor(worldX, worldY, world) {
     this.id = `${String(worldX).padStart(4, 0)}${String(worldY).padStart(4, 0)}`
     this.worldX = worldX
     this.worldY = worldY
+    this.world = world
     this.cells = []
     this.regions = {}
 
@@ -56,6 +57,18 @@ class Zone {
     return Object.values(this.regions)
   }
 
+  getEdges() {
+    let edges = []
+    const regions = this.getRegions()
+
+    for (let i = 0; i < regions.length; i += 1) {
+      const region = regions[i]
+      edges = edges.concat(region.getEdges())
+    }
+
+    return edges
+  }
+
   flood(x, y, region) {
     if (x < 0 || x >= ZONE_SIZE || y < 0 || y >= ZONE_SIZE) {
       return
@@ -90,11 +103,12 @@ class Zone {
 
     while (next !== -1) {
       this.lastRegionId += 1
-      const region = new Region(`${this.id}::${this.lastRegionId}`)
+      const region = new Region(`${this.id}::${this.lastRegionId}`, this.world)
       this.regions[region.id] = region
 
       const position = Zone.toPosition(next)
       this.flood(position.x, position.y, region)
+      region.buildEdges()
       next = getNextFree()
     }
   }
