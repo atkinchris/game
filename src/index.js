@@ -9,6 +9,7 @@ const context = canvas.getContext('2d')
 
 const world = new World()
 mapToEntities(map).forEach(entity => world.addEntity(entity))
+world.rebuildDirtyZones()
 
 const render = () => {
   context.clearRect(0, 0, canvas.width, canvas.height)
@@ -24,7 +25,7 @@ const render = () => {
   for (let entityIndex = 0; entityIndex < entities.length; entityIndex += 1) {
     const entity = entities[entityIndex]
 
-    context.fillStyle = entity.blocked ? '#333' : '#eee'
+    context.fillStyle = entity.blocked ? '#333' : world.getRegion(entity.region.id).colour
     context.fillRect(entity.x * TILE_SIZE, entity.y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
   }
 

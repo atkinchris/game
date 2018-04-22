@@ -3,6 +3,7 @@ import Zone, { ZONE_SIZE } from './zone'
 class World {
   constructor() {
     this.zones = []
+    this.dirtyZones = []
   }
 
   addZone(x, y) {
@@ -17,11 +18,27 @@ class World {
     let zone = this.zones.find(z => z.worldX === zX && z.worldY === zY)
 
     if (!zone) {
-      console.log(`Zone at {${zX}, ${zY}} did not exist; creating...`)
       zone = this.addZone(zX, zY)
     }
 
+    this.dirtyZones.push(zone)
+
     return zone.addEntity(entity)
+  }
+
+  getRegion(regionHash) {
+    const [zoneId] = regionHash.split('::')
+    const zone = this.zones.find(z => z.id === zoneId)
+
+    return zone.getRegion(regionHash)
+  }
+
+  rebuildDirtyZones() {
+    for (let i = 0; i < this.dirtyZones.length; i += 1) {
+      this.dirtyZones[i].rebuild()
+    }
+
+    this.dirtyZones = []
   }
 
   getZones() {
