@@ -3,18 +3,19 @@ import mapToEntities from './utils/mapToEntities'
 import map from './map.json'
 
 const TILE_SIZE = 16
+const TRANSLATE = 10
 
 const canvas = document.getElementById('canvas')
 const context = canvas.getContext('2d')
+context.translate(TRANSLATE, TRANSLATE)
 
 const world = new World()
 mapToEntities(map).forEach(entity => world.addEntity(entity))
-world.rebuildDirtyZones()
 
 const render = () => {
   context.clearRect(0, 0, canvas.width, canvas.height)
-  context.translate(10, 10)
 
+  world.rebuildDirtyZones()
   const zones = world.getZones()
   let entities = []
 
@@ -42,6 +43,18 @@ const render = () => {
     )
     context.stroke()
   }
+}
+
+const toWorldCoordinates = (x, y) => ({
+  x: Math.floor((x - TRANSLATE) / TILE_SIZE),
+  y: Math.floor((y - TRANSLATE) / TILE_SIZE),
+})
+
+canvas.onclick = (event) => {
+  const rect = canvas.getBoundingClientRect()
+  const { x, y } = toWorldCoordinates(event.clientX - rect.left, event.clientY - rect.top)
+  world.touch(x, y)
+  render()
 }
 
 render()

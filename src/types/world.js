@@ -13,17 +13,23 @@ class World {
   }
 
   addEntity(entity) {
-    const zX = Math.floor(entity.x / ZONE_SIZE)
-    const zY = Math.floor(entity.y / ZONE_SIZE)
-    let zone = this.zones.find(z => z.worldX === zX && z.worldY === zY)
+    let zone = this.getZone(entity.x, entity.y)
 
     if (!zone) {
+      const zX = Math.floor(entity.x / ZONE_SIZE)
+      const zY = Math.floor(entity.y / ZONE_SIZE)
+      console.log(`Creating zone at {${zX}, ${zY}}`)
       zone = this.addZone(zX, zY)
     }
 
     this.dirtyZones.push(zone)
 
     return zone.addEntity(entity)
+  }
+
+  getEntity(x, y) {
+    const zone = this.getZone(x, y)
+    return zone ? zone.getEntity(x, y) : null
   }
 
   getRegion(regionHash) {
@@ -41,8 +47,23 @@ class World {
     this.dirtyZones = []
   }
 
+  getZone(x, y) {
+    const zX = Math.floor(x / ZONE_SIZE)
+    const zY = Math.floor(y / ZONE_SIZE)
+    return this.zones.find(z => z.worldX === zX && z.worldY === zY)
+  }
+
   getZones() {
     return this.zones
+  }
+
+  touch(x, y) {
+    const { blocked } = this.getEntity(x, y) || {}
+    this.addEntity({
+      x,
+      y,
+      blocked: !blocked,
+    })
   }
 }
 
