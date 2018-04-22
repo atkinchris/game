@@ -1,12 +1,21 @@
-import randomColour from '../../utils/randomColour'
 import Zone, { ZONE_SIZE } from '../zone'
+import Region from '../region'
 
-jest.mock('../../utils/randomColour')
+jest.mock('../region')
 
 describe('Zone', () => {
-  const mockColour = 'rgb(0, 0, 0)'
   beforeEach(() => {
-    randomColour.mockImplementation(() => mockColour)
+    Region.mockImplementation((id) => {
+      const entities = []
+
+      return {
+        id,
+        addEntity: e => entities.push(e),
+        getEntities: () => entities,
+        buildNeighbours: jest.fn(),
+        destroy: jest.fn(),
+      }
+    })
   })
 
   it('builds regions of contiguous open positions', () => {
@@ -15,7 +24,6 @@ describe('Zone', () => {
 
     expect(regions.length).toBe(1)
     expect(regions[0]).toMatchObject({
-      colour: mockColour,
       id: '00000000::1',
     })
   })
@@ -32,7 +40,6 @@ describe('Zone', () => {
 
     expect(regions.length).toBe(1)
     expect(regions[0]).toMatchObject({
-      colour: mockColour,
       id: '00000000::1',
     })
   })
@@ -50,12 +57,10 @@ describe('Zone', () => {
     expect(regions.length).toBe(2)
     expect(regions[0]).toMatchObject({
       id: '00000000::1',
-      colour: mockColour,
     })
     expect(regions[0].getEntities().length).toBe(84)
     expect(regions[1]).toMatchObject({
       id: '00000000::2',
-      colour: mockColour,
     })
     expect(regions[1].getEntities().length).toBe(98)
   })
@@ -95,12 +100,10 @@ describe('Zone', () => {
     expect(regions.length).toBe(2)
     expect(regions[0]).toMatchObject({
       id: '00000000::1',
-      colour: mockColour,
     })
     expect(regions[0].getEntities().length).toBe(84)
     expect(regions[1]).toMatchObject({
       id: '00000000::2',
-      colour: mockColour,
     })
     expect(regions[1].getEntities().length).toBe(98)
   })
