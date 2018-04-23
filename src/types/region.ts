@@ -1,8 +1,17 @@
 import randomColour from '../utils/randomColour'
 import Zone, { ZONE_SIZE } from './zone'
+import World from './world';
 
 class Region {
-  constructor(id, world) {
+  id: string
+  world: World
+  entities: object[]
+  edges: object[]
+  edgeHashes: object[]
+  neighbours: object[]
+  colour: string
+
+  constructor(id: string, world: World) {
     this.id = id
     this.world = world
     this.entities = []
@@ -12,7 +21,7 @@ class Region {
     this.colour = randomColour()
   }
 
-  addEntity(entity) {
+  addEntity(entity: object) {
     this.entities.push(entity)
   }
 

@@ -23,6 +23,10 @@ const common = {
   },
   module: {
     rules: [{
+      test: /\.tsx?$/,
+      exclude: /node_modules/,
+      use: 'ts-loader',
+    }, {
       test: /\.jsx?$/,
       exclude: /node_modules/,
       use: 'babel-loader',
@@ -35,7 +39,7 @@ const common = {
     }],
   },
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
   plugins: [
     new MiniCssExtractPlugin({
@@ -58,7 +62,7 @@ const development = {
   plugins: [
     new webpack.LoaderOptionsPlugin({ debug: true }),
   ],
-  devtool: 'cheap-module-source-map',
+  devtool: 'inline-source-map',
 }
 
 const production = {

@@ -1,5 +1,5 @@
-import World from './types/world'
-import mapToEntities from './utils/mapToEntities'
+import World from './types/world.ts'
+import mapToEntities from './utils/mapToEntities.ts'
 import map from './map.json'
 
 const TILE_SIZE = 16

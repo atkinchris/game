@@ -1,10 +1,19 @@
 import Region from './region'
+import World from './world'
 
 export const ZONE_SIZE = 14
 
 class Zone {
-  constructor(worldX, worldY, world) {
-    this.id = `${String(worldX).padStart(4, 0)}${String(worldY).padStart(4, 0)}`
+  id: string
+  worldX: number
+  worldY: number
+  world: World
+  cells: any[]
+  regions: any
+  lastRegionId: number
+
+  constructor(worldX: number, worldY: number, world: World) {
+    this.id = `${worldX.toString().padStart(4, '0')}${worldY.toString().padStart(4, '0')}`
     this.worldX = worldX
     this.worldY = worldY
     this.world = world
@@ -44,12 +53,12 @@ class Zone {
     return this.cells
   }
 
-  getEntity(x, y) {
+  getEntity(x: number, y: number) {
     const localPosition = Zone.toLocalPos({ x, y })
     return this.cells[Zone.toIndex(localPosition)]
   }
 
-  getRegion(regionId) {
+  getRegion(regionId: string) {
     return this.regions[regionId]
   }
 
@@ -87,7 +96,7 @@ class Zone {
   }
 
   resetRegions() {
-    const regions = Object.values(this.regions)
+    const regions: Region[] = Object.values(this.regions)
 
     for (let i = 0; i < regions.length; i += 1) {
       regions[i].destroy()

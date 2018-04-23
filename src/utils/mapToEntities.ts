@@ -1,4 +1,4 @@
-const mapToEntities = (map) => {
+const mapToEntities = (map: number[][]): object[] => {
   const entities = []
 
   for (let y = 0; y < map.length; y += 1) {

@@ -1,19 +1,23 @@
 import Zone, { ZONE_SIZE } from './zone'
 
 class World {
+  zones: object[]
+  dirtyZones: object[]
+  edges: object
+
   constructor() {
     this.zones = []
     this.dirtyZones = []
     this.edges = {}
   }
 
-  addZone(x, y) {
+  addZone(x: number, y: number) {
     const zone = new Zone(x, y, this)
     this.zones.push(zone)
     return zone
   }
 
-  addEntity(entity) {
+  addEntity(entity: object) {
     let zone = this.getZone(entity.x, entity.y)
 
     if (!zone) {
@@ -27,12 +31,12 @@ class World {
     return zone.addEntity(entity)
   }
 
-  getEntity(x, y) {
+  getEntity(x: number, y: number) {
     const zone = this.getZone(x, y)
     return zone ? zone.getEntity(x, y) : null
   }
 
-  getRegion(regionHash) {
+  getRegion(regionHash: String) {
     const [zoneId] = regionHash.split('::')
     const zone = this.zones.find(z => z.id === zoneId)
 
