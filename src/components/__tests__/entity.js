@@ -1,5 +1,5 @@
 import Entity from '../entity'
-import { POSITION } from '../components';
+import { POSITION } from '../components'
 
 const COMPONENT = 'test-component'
 

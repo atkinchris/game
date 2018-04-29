@@ -1,6 +1,5 @@
 import World from '../world'
 import Entity from '../entity'
-import { POSITION } from '../components';
 
 describe('World', () => {
   it('creates a new World', () => {
