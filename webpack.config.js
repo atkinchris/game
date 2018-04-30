@@ -27,6 +27,14 @@ const common = {
       exclude: /node_modules/,
       use: 'babel-loader',
     }, {
+      test: /\.png$/,
+      use: [{
+        loader: 'url-loader',
+        options: {
+          limit: 8192,
+        },
+      }],
+    }, {
       test: /\.css$/,
       use: [
         MiniCssExtractPlugin.loader,
