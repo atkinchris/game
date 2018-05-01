@@ -1,5 +1,5 @@
 import Entity from '../entity'
-import { POSITION } from '../components'
+import { POSITION, RENDERABLE } from '../components'
 
 const COMPONENT = 'test-component'
 
@@ -27,6 +27,17 @@ describe('Entity', () => {
 
     const value = entity.getComponent(COMPONENT)
     expect(value).toEqual({ something: true })
+  })
+
+  it('returns the entity after adding a component to allow chaining', () => {
+    const entity = new Entity()
+
+    entity
+      .updateComponent(COMPONENT, { a: 'foo' })
+      .updateComponent('component2', { b: 'bar' })
+
+    expect(entity.getComponent(COMPONENT)).toEqual({ a: 'foo' })
+    expect(entity.getComponent('component2')).toEqual({ b: 'bar' })
   })
 
   it('updates a component if it exists', () => {
@@ -90,6 +101,18 @@ describe('Entity', () => {
       const position = entity.getComponent(POSITION)
 
       expect(position).toEqual({ x: 10, y: 3 })
+    })
+
+    it('allows the static methods to be chained to instance methods', () => {
+      const entity = Entity
+        .WithPosition({ x: 10, y: 3 })
+        .updateComponent(RENDERABLE, { foo: 'bar' })
+
+      const position = entity.getComponent(POSITION)
+      const renderable = entity.getComponent(RENDERABLE)
+
+      expect(position).toEqual({ x: 10, y: 3 })
+      expect(renderable).toEqual({ foo: 'bar' })
     })
   })
 })

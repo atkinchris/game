@@ -15,11 +15,12 @@ class Entity {
 
   updateComponent(componentName, value) {
     this.components[componentName] = value
-    return this.components[componentName]
+    return this
   }
 
   removeComponent(componentName) {
     this.components[componentName] = undefined
+    return this
   }
 
   static WithPosition(position) {
