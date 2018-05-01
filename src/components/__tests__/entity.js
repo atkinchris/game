@@ -103,6 +103,19 @@ describe('Entity', () => {
       expect(position).toEqual({ x: 10, y: 3 })
     })
 
+    it('creates an entity from components', () => {
+      const entity = Entity.FromComponents({
+        [POSITION]: { x: 10, y: 3 },
+        [RENDERABLE]: { foo: 'bar' },
+      })
+
+      const position = entity.getComponent(POSITION)
+      const renderable = entity.getComponent(RENDERABLE)
+
+      expect(position).toEqual({ x: 10, y: 3 })
+      expect(renderable).toEqual({ foo: 'bar' })
+    })
+
     it('allows the static methods to be chained to instance methods', () => {
       const entity = Entity
         .WithPosition({ x: 10, y: 3 })

@@ -1,12 +1,19 @@
 import loadImage from './loadImage'
 
 class TileManager {
-  constructor(tileSet) {
+  constructor(tileSet, tileSize = 32) {
     this.tiles = {}
     this.tileSet = tileSet
+    this.tileSize = tileSize
   }
 
   getTile(id) {
+    const tile = this.tiles[id]
+
+    if (!tile) {
+      throw Error(`Tile "${id}" not found`)
+    }
+
     return this.tiles[id]
   }
 

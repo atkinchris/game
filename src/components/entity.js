@@ -28,6 +28,10 @@ class Entity {
       [POSITION]: position,
     })
   }
+
+  static FromComponents(components) {
+    return new Entity(components)
+  }
 }
 
 export default Entity

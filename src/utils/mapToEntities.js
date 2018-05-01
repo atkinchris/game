@@ -1,3 +1,6 @@
+import Entity from '../components/entity'
+import { POSITION, RENDERABLE } from '../components/components';
+
 const mapToEntities = (map) => {
   const entities = []
 
@@ -6,7 +9,10 @@ const mapToEntities = (map) => {
 
     for (let x = 0; x < row.length; x += 1) {
       const cell = row[x]
-      entities.push({ x, y, blocked: cell === 1 })
+      entities.push(Entity.FromComponents({
+        [POSITION]: { x, y },
+        [RENDERABLE]: { tileName: cell ? 'wall' : 'grass' },
+      }))
     }
   }
 
