@@ -13,15 +13,15 @@ const world = new World()
 const viewport = {
   left: 0,
   top: 0,
-  width: 800,
-  height: 600,
+  width: 25,
+  height: 20,
 }
 
 const setup = async () => {
-  canvas.height = viewport.height
-  canvas.width = viewport.width
   tileManager = new TileManager(tileSet)
   await tileManager.loadTiles()
+  canvas.height = viewport.height * tileManager.tileSize
+  canvas.width = viewport.width * tileManager.tileSize
 
   world.addEntities(mapToEntities(map))
 }
@@ -40,7 +40,7 @@ const render = () => {
     }
   })
 
-  context.translate(-viewport.left, -viewport.top)
+  context.translate(-viewport.left * tileManager.tileSize, -viewport.top * tileManager.tileSize)
 
   requestAnimationFrame(render)
 }
